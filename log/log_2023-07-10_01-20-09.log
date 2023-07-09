@@ -1,0 +1,21 @@
+2023-07-10 01:20:09,342 - INFO - Starting
+2023-07-10 01:20:09,353 - INFO - image_dir: C:\Users\user\cv2_snip_tool\image
+2023-07-10 01:20:09,353 - INFO - snip_dir: C:\Users\user\cv2_snip_tool\snip
+2023-07-10 01:20:09,353 - INFO - Successfully read previous progress, 0 files read before
+2023-07-10 01:20:09,354 - INFO - 5 file stored to queue
+2023-07-10 01:20:09,354 - INFO - 0 file in image_dir read previously, not stored to queue
+2023-07-10 01:20:09,354 - INFO - 0 cannot be stored to queue, not a file
+2023-07-10 01:20:09,354 - INFO - opened stream for progress.txt
+2023-07-10 01:20:09,354 - INFO - Process Image:C:\Users\user\cv2_snip_tool\image\architecture-7857832_640.jpg
+2023-07-10 01:20:11,639 - INFO - finished processing image: C:\Users\user\cv2_snip_tool\image\architecture-7857832_640.jpg
+2023-07-10 01:20:11,660 - INFO - Process Image:C:\Users\user\cv2_snip_tool\image\bird-7946807_640.jpg
+2023-07-10 01:20:11,797 - INFO - finished processing image: C:\Users\user\cv2_snip_tool\image\bird-7946807_640.jpg
+2023-07-10 01:20:11,815 - INFO - Process Image:C:\Users\user\cv2_snip_tool\image\md500-8068034_640.jpg
+2023-07-10 01:20:11,948 - INFO - finished processing image: C:\Users\user\cv2_snip_tool\image\md500-8068034_640.jpg
+2023-07-10 01:20:11,965 - INFO - Process Image:C:\Users\user\cv2_snip_tool\image\mother-8097324_640.webp
+2023-07-10 01:20:20,413 - INFO - Snippet saved: C:\Users\user\cv2_snip_tool\snip\2023-07-10_01-20-20_0.jpg
+2023-07-10 01:20:20,414 - INFO - Snippet saved: C:\Users\user\cv2_snip_tool\snip\2023-07-10_01-20-20_1.jpg
+2023-07-10 01:20:20,414 - INFO - finished processing image: C:\Users\user\cv2_snip_tool\image\mother-8097324_640.webp
+2023-07-10 01:20:20,433 - INFO - Process Image:C:\Users\user\cv2_snip_tool\image\tree-7845181_640.jpg
+2023-07-10 01:24:23,730 - INFO - end of images queue loop or user close window
+2023-07-10 01:24:23,730 - INFO - Exit
