@@ -1,12 +1,12 @@
 import requests
 import json
 import logging
+from config import load_config
 
-APP_ID = "edtorch_project_8d7e91_0e1a52"
-APP_API_KEY = "5d19e69eae6de933aa7b86654cb97e4dc04f42c2a5c2df20aedda1b56a86a817"
+config = load_config()
 
 class Mathpix:
-    def __init__(self, app_id=APP_ID, app_key_api=APP_API_KEY):
+    def __init__(self, app_id=config["mathpix"]["app_id"], app_key_api=config["mathpix"]["app_api_key"]):
         self.app_id = app_id
         self.app_api_key = app_key_api
     

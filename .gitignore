@@ -2,3 +2,4 @@ image/*
 log/*
 snip/*
 __pycache__
+config.yaml
