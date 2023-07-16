@@ -22,6 +22,7 @@ import time
 import cv2
 import queue
 import datetime
+import threading
 
 from mathpix_connect import Mathpix
 
@@ -132,74 +133,82 @@ def main():
     # =====================================================
     
     # created progress.txt if not exist, or open it for appending image_path
-    with open("../progress.txt", 'a') as f:
-        logging.info("opened stream for progress.txt")
-        
-        close_window = False
-        while not file_queue.empty() and not close_window:
-            # get the head image of the queue
-            current_img_path = file_queue.get()
-            logging.info(f"Process Image: {current_img_path}")
+    
+    logging.info("opened stream for progress.txt")
+    
+    close_window = False
+    while not file_queue.empty() and not close_window:
+        # get the head image of the queue
+        current_img_path = file_queue.get()
+        logging.info(f"Process Image: {current_img_path}")
 
-            # open it
-            img = cv2.imread(current_img_path)
-            img_clone = img.copy()
+        # open it
+        img = cv2.imread(current_img_path)
+        img_clone = img.copy()
 
-            saved_rectangle_ls = []
+        saved_rectangle_ls = []
 
-            # loop for drawing boxes on another image copy
-            while True:
-                cv2.imshow('Image', img)
+        # loop for drawing boxes on another image copy
+        while True:
+            cv2.imshow('Image', img)
 
-                x1, y1, x2, y2 = -1, -1, -1, -1 # reset coordiante, coordinate x1y1 for down and x2y2 for release
+            x1, y1, x2, y2 = -1, -1, -1, -1 # reset coordiante, coordinate x1y1 for down and x2y2 for release
 
-                is_dragging = False
-                cv2.setMouseCallback('Image', click_and_crop) # mouse callback operation
+            is_dragging = False
+            cv2.setMouseCallback('Image', click_and_crop) # mouse callback operation
 
-                key = cv2.waitKey(0)
+            key = cv2.waitKey(0)
 
-                # Enter: save all the selected region to snips and process next photo (if exisit)
-                # s: confirm and save the last rectangle 
-                if key == 13: # Enter key
+            # Enter: save all the selected region to snips and process next photo (if exisit)
+            # s: confirm and save the last rectangle 
+            if key == 13: # Enter key
 
-                    # not write to process tracking file if -i argument
-                    if not args.ignore:
+                # not write to process tracking file if -i argument
+                if not args.ignore:
+                    with open("../progress.txt", 'a') as f:
                         f.write(f"{current_img_path}\n")
-                        logging.info(f"Saved {current_img_path} to progress.txt")
+                    logging.info(f"Saved {current_img_path} to progress.txt")
 
-                    # generate file names, save cropped image
-                    for i, coord in enumerate(saved_rectangle_ls):
-                        now = datetime.datetime.now()
-                        cropped_path = os.path.join(args.snip_dir, now.strftime("%Y-%m-%d_%H-%M-%S")+ "_" + str(i) +".jpg")
-                        w_success = cv2.imwrite(cropped_path, 
-                                    img_clone[coord[0][1]:coord[1][1], coord[0][0]:coord[1][0]])
-                        
-                        if w_success:
-                            mp.sendOne(cropped_path)
+                # generate file names, save cropped image
+                for i, coord in enumerate(saved_rectangle_ls):
+                    now = datetime.datetime.now()
+                    cropped_path = os.path.join(args.snip_dir, now.strftime("%Y-%m-%d_%H-%M-%S")+ "_" + str(i) +".jpg")
+                    
+                    ### modify here 
+                    w_success = cv2.imwrite(cropped_path, 
+                                img_clone[coord[0][1]:coord[1][1], coord[0][0]:coord[1][0]])
+                    
+                    if w_success:
+                        fetch_thread = threading.Thread(target=mp.sendOne, args=(cropped_path,))
+                        fetch_thread.start()
+                    ### modify here
+                    print("is that async?")
 
-                        logging.info(f"Snippet saved: {cropped_path}")
+                    logging.info(f"Snippet saved: {cropped_path}")
 
-                    logging.info(f"finished processing image: {current_img_path}")
-                    break
+                logging.info(f"finished processing image: {current_img_path}")
+                break
 
-                elif key == ord('s'): # 's' key to confirm the last rectangle on image
-                    is_dragging = False
+            elif key == ord('s'): # 's' key to confirm the last rectangle on image
+                is_dragging = False
 
-                    # prevent duplicating the rectangle and save the region on image
-                    rec_coordinate = ((min(x1,x2), min(y1,y2)), (max(x1,x2), max(y1,y2)))
-                    if rec_coordinate not in saved_rectangle_ls and (x1, y1) != (x2, y2) and x2 != -1 and y2 != -1:
-                        saved_rectangle_ls.append(rec_coordinate)
-                        img = cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                        cv2.imshow('Image', img)
-                
-                # Check if the window is closed by user
-                if cv2.getWindowProperty("Image", cv2.WND_PROP_VISIBLE) < 1:
-                    close_window = True
-                    break
+                # prevent duplicating the rectangle and save the region on image
+                rec_coordinate = ((min(x1,x2), min(y1,y2)), (max(x1,x2), max(y1,y2)))
+                if rec_coordinate not in saved_rectangle_ls and (x1, y1) != (x2, y2) and x2 != -1 and y2 != -1:
+                    saved_rectangle_ls.append(rec_coordinate)
+                    img = cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    cv2.imshow('Image', img)
+            
+            # Check if the window is closed by user
+            if cv2.getWindowProperty("Image", cv2.WND_PROP_VISIBLE) < 1:
+                close_window = True
+                break
+        
+        cv2.destroyAllWindows()
+    
+    fetch_thread.join()
 
-            cv2.destroyAllWindows()
-
-        logging.info("end of images queue loop or user close window")
+    logging.info("end of images queue loop or user close window")
 
     logging.info("Exit")
 
