@@ -137,6 +137,9 @@ def main():
     logging.info("opened stream for progress.txt")
     
     close_window = False
+
+    run_thread_ls = [] # for join() the threads at the end of the program
+
     while not file_queue.empty() and not close_window:
         # get the head image of the queue
         current_img_path = file_queue.get()
@@ -180,6 +183,7 @@ def main():
                     
                     if w_success:
                         fetch_thread = threading.Thread(target=mp.sendOne, args=(cropped_path,))
+                        run_thread_ls.append(fetch_thread)
                         fetch_thread.start()
                     ### modify here
                     print("is that async?")
@@ -206,7 +210,9 @@ def main():
         
         cv2.destroyAllWindows()
     
-    fetch_thread.join()
+    # close all mathpix api thread
+    for trd in run_thread_ls:
+        trd.join()
 
     logging.info("end of images queue loop or user close window")
 
