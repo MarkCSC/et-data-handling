@@ -8,20 +8,21 @@ It comes with a tracking file called ```process.txt``` which help program tracks
 In case any crashes occured or you just want to take a rest during the cropping process, you don't have to start it all over again. with this tracking file.
 
 ## 2. __FILE STRUCTURE__
-You __MUST__ have the following file structure to start using this tool
-
 ```
 <your_dir>/
-├── main.py
-└── log/
-```
-The following file structure is __highly suggested__ (or you will have to input the args everytime by yourself)
-```
-<your_dir>/
-├── main.py  # entry point
-├── log/     # run logs
-├── image/   # default dest for reading images
-└── snip/    # default dest for stoging sinppets
+├── image/        # default image dir to get
+├── log/          # *** log file dir  
+├── snip/         # default snippets storing dir
+├── src/          # source code 
+│   ├── main.py              # main entry
+│   ├── mathpix_connect.py   # mathpix api handler
+│   └── config/              
+│       ├── __init__.py       # export config.yaml as lib
+│       └── config.yaml       # store env variable
+├── .gitignore/    
+├── process.txt    # store already read image path
+├── README.md
+└── requirements.txt
 ```
 ---
 
