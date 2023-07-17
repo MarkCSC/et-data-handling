@@ -28,7 +28,21 @@ In case any crashes occured or you just want to take a rest during the cropping 
 
 ## 3. __START USING__
 
-### 3.1 Arguments
+### 3.1 Setup
+1. Install packages stated in requirements.txt to your venv
+2. add config.yaml under /src/config/
+
+config.yaml:
+```
+mongodb:
+  uri: <mongodb uri>
+
+mathpix:
+  app_id: <app_id>
+  app_api_key: <app_api_key>
+```
+
+### 3.2 Arguments
 
 If you are using the recommened structure. 
 
@@ -68,7 +82,7 @@ or
 python main.py --ignore
 ```
 
-### 3.2 Cropping images
+### 3.3 Cropping images
 
 When the image shows on the secreen, you can hold and drag a rectangle out.
 
