@@ -23,6 +23,7 @@ import cv2
 import queue
 import datetime
 import threading
+from config import load_config
 
 from mathpix_connect import Mathpix
 
@@ -111,6 +112,11 @@ def main():
                 image_copy = img.copy()
                 cv2.rectangle(image_copy, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 cv2.imshow('Image', image_copy)
+    
+    # ===================================
+    # 0. load config
+    # ===================================
+    config = load_config()
                 
     # ===================================
     # 1. read all filename from IMAGE_DIR
@@ -145,8 +151,17 @@ def main():
         current_img_path = file_queue.get()
         logging.info(f"Process Image: {current_img_path}")
 
-        # open it
+        # open it 
         img = cv2.imread(current_img_path)
+
+        # # or resize and open it (not that good in my opinion maybe my monitor is too small)
+        # if img.shape[0] > config["screen_size"]["width"]:
+        #     print(img.shape)
+        #     aspect_ratio = img.shape[1] / img.shape[0] #height/width
+        #     new_height = int(config["screen_size"]["height"])
+        #     new_width = int(new_height * aspect_ratio)
+        #     img = cv2.resize(img, (new_width, new_height), interpolation=cv2.INTER_NEAREST)
+
         img_clone = img.copy()
 
         saved_rectangle_ls = []
@@ -185,8 +200,6 @@ def main():
                         fetch_thread = threading.Thread(target=mp.sendOne, args=(cropped_path,))
                         run_thread_ls.append(fetch_thread)
                         fetch_thread.start()
-                    ### modify here
-                    print("is that async?")
 
                     logging.info(f"Snippet saved: {cropped_path}")
 
