@@ -82,6 +82,15 @@ or
 python main.py --ignore
 ```
 
+You can also connect the programme to mathpix to see the almost real time response/ predict from mathpix
+```
+python main.py -m
+```
+or
+```
+python main.py --mathpix
+```
+
 ### 3.3 Cropping images
 
 When the image shows on the secreen, you can hold and drag a rectangle out.

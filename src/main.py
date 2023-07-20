@@ -196,8 +196,8 @@ def main():
                     w_success = cv2.imwrite(cropped_path, 
                                 img_clone[coord[0][1]:coord[1][1], coord[0][0]:coord[1][0]])
                     
-                    if w_success:
-                        fetch_thread = threading.Thread(target=mp.sendOne, args=(cropped_path,))
+                    if w_success and args.mathpix:
+                        fetch_thread = threading.Thread(target=mp.checkOne, args=(cropped_path,))
                         run_thread_ls.append(fetch_thread)
                         fetch_thread.start()
 
@@ -249,6 +249,10 @@ if __name__ == "__main__":
                         "--ignore", 
                         action="store_true", 
                         help="original photos will not save record to process.txt")
+    parser.add_argument("-m",
+                        "--mathpix",
+                        action="store_true",
+                        help="directory for exporting cropped snippet")
     
     args = parser.parse_args()
 

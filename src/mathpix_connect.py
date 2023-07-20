@@ -10,7 +10,7 @@ class Mathpix:
         self.app_id = app_id
         self.app_api_key = app_key_api
     
-    def sendOne(self, file=None):
+    def checkOne(self, file=None):
         if file == None:
             logging.error("Cropped image doesn't exist, can't send to mathpix")
             print("File doesn't exist")
