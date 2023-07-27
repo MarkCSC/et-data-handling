@@ -144,7 +144,8 @@ def main():
     
     close_window = False
 
-    run_thread_ls = [] # for join() the threads at the end of the program
+    mp_thread_ls = [] # for join() the threads at the end of the program
+    db_thread_ls = []
 
     while not file_queue.empty() and not close_window:
         # get the head image of the queue
@@ -198,8 +199,13 @@ def main():
                     
                     if w_success and args.mathpix:
                         fetch_thread = threading.Thread(target=mp.checkOne, args=(cropped_path,))
-                        run_thread_ls.append(fetch_thread)
+                        mp_thread_ls.append(fetch_thread)
                         fetch_thread.start()
+                    
+                    if w_success and args.mongodb:
+                        save_db_thread = threading.Thread(target=mp.storeMongo, args=(cropped_path,))
+                        db_thread_ls.append(save_db_thread)
+                        save_db_thread.start()
 
                     logging.info(f"Snippet saved: {cropped_path}")
 
@@ -224,7 +230,11 @@ def main():
         cv2.destroyAllWindows()
     
     # close all mathpix api thread
-    for trd in run_thread_ls:
+    for trd in mp_thread_ls:
+        trd.join()
+
+    # close all store to db thread
+    for trd in db_thread_ls:
         trd.join()
 
     logging.info("end of images queue loop or user close window")
@@ -253,6 +263,11 @@ if __name__ == "__main__":
                         "--mathpix",
                         action="store_true",
                         help="directory for exporting cropped snippet")
+    
+    parser.add_argument("-db",
+                        "--mongodb",
+                        action="store_true",
+                        help="store mathpix return to mongodb")
     
     args = parser.parse_args()
 
