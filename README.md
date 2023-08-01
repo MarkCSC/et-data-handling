@@ -91,6 +91,11 @@ or
 python main.py --mathpix
 ```
 
+Store it to mongodb
+```
+python main.py --mongodb
+```
+
 ### 3.3 Cropping images
 
 When the image shows on the secreen, you can hold and drag a rectangle out.
