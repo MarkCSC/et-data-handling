@@ -70,7 +70,7 @@ def queue_init(prev_read_ls):
     f_count = 0
     non_f_count = 0
     f_read_before = 0
-    for f in os.listdir(args.image_dir):
+    for f in sorted(os.listdir(args.image_dir)):
         f_path = os.path.join(args.image_dir, f)
         if os.path.isfile(f_path):
             if f_path not in prev_read_ls:
@@ -110,7 +110,7 @@ def main():
                 x2, y2 = x, y
                 is_dragging = False
                 image_copy = img.copy()
-                cv2.rectangle(image_copy, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                cv2.rectangle(image_copy, (x1, y1), (x2, y2), (0, 255, 0), 5)
                 cv2.imshow('Image', image_copy)
     
     # ===================================
@@ -222,6 +222,10 @@ def main():
                     img = cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
                     cv2.imshow('Image', img)
             
+            elif key == ord('q'):
+                close_window = True
+                break
+
             # Check if the window is closed by user
             if cv2.getWindowProperty("Image", cv2.WND_PROP_VISIBLE) < 1:
                 close_window = True
