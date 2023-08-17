@@ -206,6 +206,7 @@ def main():
                         save_db_thread = threading.Thread(target=mp.storeMongo, args=(cropped_path,))
                         db_thread_ls.append(save_db_thread)
                         save_db_thread.start()
+                        save_db_thread.join()
 
                     logging.info(f"Snippet saved: {cropped_path}")
 
@@ -219,7 +220,7 @@ def main():
                 rec_coordinate = ((min(x1,x2), min(y1,y2)), (max(x1,x2), max(y1,y2)))
                 if rec_coordinate not in saved_rectangle_ls and (x1, y1) != (x2, y2) and x2 != -1 and y2 != -1:
                     saved_rectangle_ls.append(rec_coordinate)
-                    img = cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
+                    img = cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
                     cv2.imshow('Image', img)
             
             elif key == ord('q'):
@@ -237,9 +238,9 @@ def main():
     for trd in mp_thread_ls:
         trd.join()
 
-    # close all store to db thread
-    for trd in db_thread_ls:
-        trd.join()
+    # # close all store to db thread
+    # for trd in db_thread_ls:
+    #     trd.join()
 
     logging.info("end of images queue loop or user close window")
 

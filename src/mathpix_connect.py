@@ -54,7 +54,11 @@ class Mathpix:
         # database and collection code goes here
         db = self.client.Edtorch
         coll = db.question
-        coll.insert_one(result)
+        result_id = coll.insert_one(result)
 
+        if result_id:
+            print("Successfully stored to Mongodb")
+        else:
+            print("failed to write to mongodb")
 
 
